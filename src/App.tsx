@@ -1,13 +1,10 @@
+import 'react-native-gesture-handler';
 import React from 'react';
 
-import {View, Text} from 'react-native';
+import Router from './router';
 
 const App: React.FC = () => {
-  return (
-    <View>
-      <Text>TnmAplicativo</Text>
-    </View>
-  );
+  return <Router />;
 };
 
 export default App;
