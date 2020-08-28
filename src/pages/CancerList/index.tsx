@@ -11,7 +11,7 @@ const cancerList = [
   { label: 'P', options: ["Próstata"] },
 ]
 
-const CancerList: React.FC = () => {
+const CancerList: React.FC = (navigation) => {
   return (
     <>
       <Container>

@@ -1,9 +1,10 @@
 import styled from 'styled-components/native';
 
-import { colors } from '../../general/colors';
+import {colors} from '../../general/colors';
 
 export const Container = styled.View`
   flex: 1;
+  background: ${colors.white};
 `;
 
 export const Label = styled.Text`
@@ -14,7 +15,7 @@ export const Label = styled.Text`
 `;
 
 export const Option = styled.Text`
-font-family: 'Roboto-Regular';
+  font-family: 'Roboto-Regular';
   font-size: 16px;
   color: ${colors.black};
   margin: 14px 0 11px 0;
@@ -22,7 +23,7 @@ font-family: 'Roboto-Regular';
 
 export const Separator = styled.View`
   width: 100%;
-  height:  1px;
+  height: 1px;
   background: ${colors.divisor};
 `;
 
