@@ -1,4 +1,5 @@
 import React, {useCallback} from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 import AdMob from '../../components/AdMob';
 
@@ -17,10 +18,9 @@ import {
   SearchMessage,
   InitialMessage,
 } from './styles';
-import {useNavigation} from '@react-navigation/native';
 
 const Search: React.FC = () => {
-  const {navigation} = useNavigation();
+  const navigation = useNavigation();
   const back = useCallback(() => {
     navigation.goBack();
   }, [navigation]);

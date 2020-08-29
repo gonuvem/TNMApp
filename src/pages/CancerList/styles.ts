@@ -30,3 +30,5 @@ export const Separator = styled.View`
 export const List = styled.View`
   padding-left: 16px;
 `;
+
+export const View = styled.View``;
