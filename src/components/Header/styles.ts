@@ -12,7 +12,7 @@ export const Container = styled.View`
 `;
 
 export const Title = styled.Text`
-  font-family: 'Roboto-Regular';
+  font-family: 'Roboto-Medium';
   font-size: 20px;
   color: ${colors.white};
 `;
