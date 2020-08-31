@@ -17,7 +17,7 @@ const forFade = ({current}: any) => ({
 const configAnimation = {
   animation: 'timing',
   config: {
-    duration: 500,
+    duration: 300,
     easing: Easing.linear,
   },
 };
