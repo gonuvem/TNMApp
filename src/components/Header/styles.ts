@@ -19,6 +19,7 @@ export const Title = styled.Text`
 
 export const ViewButtons = styled.View`
   flex-direction: row;
+  align-items: center;
 `;
 
 export const Button = styled.TouchableOpacity`
@@ -34,4 +35,10 @@ export const Icon = styled.Image.attrs({
   height: 18px;
   width: 18px;
   margin-left: 30px;
+`;
+
+export const Close = styled.Image`
+  height: 15px;
+  width: 15px;
+  margin-right: 30px;
 `;
