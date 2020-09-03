@@ -15,7 +15,12 @@ import {
   Value,
 } from './styles';
 
-const Picker: React.FC = () => {
+interface PickerProps {
+  title: string;
+  options: string[];
+}
+
+const Picker: React.FC<PickerProps> = ({options, title}) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const heighDropdown = useRef(new Animated.Value(0)).current;
   const scaleTitle = useRef(new Animated.Value(1)).current;
@@ -26,11 +31,18 @@ const Picker: React.FC = () => {
   const openModal = useCallback(() => {
     setIsOpended(!isOpened);
     if (optionSelected) {
-      Animated.timing(fadeAnim, {
-        toValue: isOpened ? 0 : 1,
-        duration: 200,
-        useNativeDriver: true,
-      }).start(() => {});
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: isOpened ? 0 : 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(heighDropdown, {
+          toValue: isOpened ? 0 : 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {});
     } else {
       Animated.parallel([
         Animated.timing(scaleTitle, {
@@ -74,14 +86,21 @@ const Picker: React.FC = () => {
         duration: 200,
         useNativeDriver: true,
       }),
+      Animated.timing(heighDropdown, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }),
     ]).start(() => {
       setIsOpended(false);
     });
   }, []);
 
+  // console.log(options);
+
   return (
     <Container>
-      <SelectField isOpened={isOpened} onPress={openModal}>
+      <SelectField isOpened={isOpened} onPress={() => openModal()}>
         {optionSelected ? <Value>{optionSelected}</Value> : undefined}
         <CardTitle
           style={{
@@ -89,24 +108,22 @@ const Picker: React.FC = () => {
             translateX: moveTitle.x,
             transform: [{scale: scaleTitle}],
           }}>
-          <Title isOpened={isOpened}>Tumor Primario</Title>
+          <Title isOpened={isOpened}>{title}</Title>
         </CardTitle>
         <Icon source={arrowDown} />
       </SelectField>
+
       <Dropdown
         style={{opacity: fadeAnim, transform: [{scaleY: heighDropdown}]}}>
-        <Select
-          onPress={() => {
-            setOptionSelected('T1'), animatedField();
-          }}>
-          <Option>T1</Option>
-        </Select>
-        <Select onPress={openModal}>
-          <Option>T2</Option>
-        </Select>
-        <Select onPress={openModal}>
-          <Option>T3</Option>
-        </Select>
+        {options.map((item) => (
+          <Select
+            key={item}
+            onPress={() => {
+              setOptionSelected(item), animatedField();
+            }}>
+            <Option>{item}</Option>
+          </Select>
+        ))}
       </Dropdown>
     </Container>
   );

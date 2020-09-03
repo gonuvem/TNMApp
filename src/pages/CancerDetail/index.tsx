@@ -8,6 +8,8 @@ import Picker from '../../components/Picker';
 
 import {Container, ViewFields} from './styles';
 
+const options = ['T0', 'T1', 'T2', 'T3', 'T4'];
+
 const CancerDetail: React.FC = () => {
   const {params} = useRoute();
   return (
@@ -15,8 +17,8 @@ const CancerDetail: React.FC = () => {
       <Container>
         <Header title={params?.cancerName} showCloseButton={true} />
         <ViewFields>
-          <Picker />
-          <Picker />
+          <Picker title="Tumor Primario" options={options} />
+          <Picker title="Linfonodos Regionais" options={options} />
         </ViewFields>
       </Container>
       <AdMob />

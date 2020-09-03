@@ -46,6 +46,8 @@ export const Drop = styled.View`
 
 export const Dropdown = Animated.createAnimatedComponent(Drop);
 
+// export const Dropdown = styled.Picker``;
+
 export const Option = styled.Text`
   font-family: 'Roboto-Regular';
   font-size: 14px;
