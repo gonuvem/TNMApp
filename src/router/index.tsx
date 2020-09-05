@@ -27,7 +27,17 @@ const Router: React.FC = () => (
   <NavigationContainer>
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="Home" component={CancerList} />
-      <Stack.Screen name="SavedResults" component={SavedResult} />
+      <Stack.Screen
+        name="SavedResults"
+        component={SavedResult}
+        options={{
+          cardStyleInterpolator: forFade,
+          transitionSpec: {
+            open: configAnimation,
+            close: configAnimation,
+          },
+        }}
+      />
       <Stack.Screen
         name="Search"
         component={Search}
