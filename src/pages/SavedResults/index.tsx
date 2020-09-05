@@ -1,19 +1,13 @@
-import React, {useCallback} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import React from 'react';
 
 import AdMob from '../../components/AdMob';
+import Header from './components/Header';
 
-import {arrowLeft, menuIcon, searchIcon, trashIcon} from '../../general/images';
+import {trashIcon} from '../../general/images';
 
 import {
   Container,
-  Header,
-  Back,
-  ArrowIcon,
-  Title,
-  Button,
   Icon,
-  ViewButtons,
   Result,
   Stage,
   Number,
@@ -25,49 +19,41 @@ import {
   ViewInformation,
 } from './styles';
 
+const listResult = [
+  {
+    title: 'Jorge da Silva Oliveira - Colón...',
+    date: '21/08/2020',
+    stage: 'IVA',
+  },
+  {title: 'Mama (Alessandra)', date: '19/08/2020', stage: 'IV'},
+  {title: 'Prostáta', date: '17/08/2020', stage: 'I'},
+];
+
 const SavedResults: React.FC = () => {
-  const {goBack, navigate} = useNavigation();
-  const back = useCallback(() => {
-    goBack();
-  }, [goBack]);
-  const navigateToSearch = useCallback(() => {
-    navigate('Search');
-  }, [navigate]);
   return (
     <>
       <Container>
-        <Header>
-          <ViewButtons>
-            <Back onPress={back}>
-              <ArrowIcon source={arrowLeft} />
-            </Back>
-            <Title>Resultados Salvos</Title>
-          </ViewButtons>
-          <ViewButtons>
-            <Button onPress={navigateToSearch}>
-              <Icon source={searchIcon} />
-            </Button>
-            <Button>
-              <Icon source={menuIcon} />
-            </Button>
-          </ViewButtons>
-        </Header>
-        <ViewInformation>
-          <Result>
-            <Stage>
-              <Number>I</Number>
-            </Stage>
-            <InfoResult>
-              <Informations>
-                <Name>Jorge da Silva Oliveira - Colón...</Name>
-                <Date>21/08/2020</Date>
-              </Informations>
-              <ButtonDelete>
-                <Icon source={trashIcon} />
-              </ButtonDelete>
-            </InfoResult>
-          </Result>
-        </ViewInformation>
+        <Header />
+        <ViewInformation
+          data={listResult}
+          keyExtractor={(item) => item.title}
+          renderItem={({item}: any) => (
+            <Result>
+              <Stage>
+                <Number>{item.stage}</Number>
+              </Stage>
+              <InfoResult>
+                <Informations>
+                  <Name>{item.title}</Name>
+                  <Date>{item.date}</Date>
+                </Informations>
+                <ButtonDelete>
+                  <Icon source={trashIcon} />
+                </ButtonDelete>
+              </InfoResult>
+            </Result>
+          )}
+        />
       </Container>
       <AdMob />
     </>

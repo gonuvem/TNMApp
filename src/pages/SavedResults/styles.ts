@@ -7,39 +7,6 @@ export const Container = styled.View`
   background: ${colors.white};
 `;
 
-export const Header = styled.View`
-  height: 64px;
-  background: ${colors.primary};
-  flex-direction: row;
-  padding: 0 16px 0 16px;
-  align-items: center;
-
-  justify-content: space-between;
-`;
-
-export const Back = styled.TouchableOpacity`
-  padding: 10px 10px 10px 0;
-  margin-right: 30px;
-`;
-
-export const ArrowIcon = styled.Image`
-  height: 18px;
-  width: 18px;
-`;
-
-export const Title = styled.Text`
-  font-family: 'Roboto-Medium';
-  font-size: 20px;
-  color: ${colors.white};
-`;
-
-export const Button = styled.TouchableOpacity`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 18px 0;
-`;
-
 export const Icon = styled.Image.attrs({
   resizeMode: 'contain',
 })`
@@ -47,13 +14,9 @@ export const Icon = styled.Image.attrs({
   width: 19px;
 `;
 
-export const ViewButtons = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
 export const Result = styled.View`
   flex-direction: row;
+  margin-bottom: 14px;
 `;
 
 export const Stage = styled.View`
@@ -102,6 +65,6 @@ export const ButtonDelete = styled.TouchableOpacity`
   align-items: center;
 `;
 
-export const ViewInformation = styled.View`
+export const ViewInformation = styled.FlatList`
   padding: 28px 0 0 8px;
 `;
