@@ -29,7 +29,7 @@ export const Stage = styled.View`
 `;
 
 export const Number = styled.Text`
-  font-family: 'Roboto-Regular';
+  font-family: 'Roboto-Medium';
   font-size: 20px;
   font-weight: 500;
   color: ${colors.white};
