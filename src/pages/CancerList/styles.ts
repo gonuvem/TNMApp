@@ -32,3 +32,5 @@ export const List = styled.View`
 `;
 
 export const View = styled.View``;
+
+export const Card = styled.TouchableOpacity``;

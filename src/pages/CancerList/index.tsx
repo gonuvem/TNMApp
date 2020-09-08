@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useCallback} from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 import Header from '../../components/Header';
 import AdMob from '../../components/AdMob';
 
-import {Container, Label, Option, Separator, List, View} from './styles';
+import {Container, Label, Option, Separator, List, View, Card} from './styles';
 
 const cancerList = [
   {label: 'C', options: ['Colón e Reto', 'Colón e Reto']},
@@ -11,20 +12,27 @@ const cancerList = [
   {label: 'P', options: ['Próstata']},
 ];
 
-const CancerList: React.FC = (navigation) => {
+const CancerList: React.FC = () => {
+  const {navigate} = useNavigation();
+
+  const navigateToDetail = useCallback((cancer: string) => {
+    navigate('CancerDetail', {
+      cancerName: cancer,
+    });
+  }, []);
   return (
     <>
       <Container>
-        <Header />
+        <Header title="Lista de cânceres" />
         <List>
           {cancerList.map((cancer, index) => (
             <View key={index}>
               <Label>{cancer.label}</Label>
               {cancer.options.map((name, index) => (
-                <View key={index}>
+                <Card key={index} onPress={() => navigateToDetail(name)}>
                   <Option>{name}</Option>
                   <Separator />
-                </View>
+                </Card>
               ))}
             </View>
           ))}
