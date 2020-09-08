@@ -20,6 +20,9 @@ const Header: React.FC<HeaderProps> = ({title, showCloseButton}) => {
   const back = useCallback(() => {
     goBack();
   }, [goBack]);
+  const navigateToSavedResults = useCallback(() => {
+    navigate('SavedResults');
+  }, [navigate]);
 
   return (
     <Container>
@@ -32,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({title, showCloseButton}) => {
         <Title>{title}</Title>
       </ViewButtons>
       <ViewButtons>
-        <Button>
+        <Button onPress={navigateToSavedResults}>
           <Icon source={listIcon} />
         </Button>
         <Button onPress={navigateToSearch}>
