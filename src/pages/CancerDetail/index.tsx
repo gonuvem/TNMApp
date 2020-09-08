@@ -19,6 +19,9 @@ const CancerDetail: React.FC = () => {
         <ViewFields>
           <Picker title="Tumor Primario" options={options} />
           <Picker title="Linfonodos Regionais" options={options} />
+          <Picker title="Metástase" options={options} />
+          <Picker title="Nível de PSA" options={options} />
+          <Picker title="Grau Histológico" options={options} />
         </ViewFields>
       </Container>
       <AdMob />
