@@ -31,16 +31,16 @@ const options = ['T0', 'T1', 'T2', 'T3', 'T4'];
 const CancerDetail: React.FC = () => {
   const {params} = useRoute();
   const [openModal, setOpenModal] = useState(false);
+  const {headers, values} = params?.cancerInfo;
+
   return (
     <>
       <Container>
         <Header title={params?.cancerName} showCloseButton={true} />
         <ViewFields>
-          <Picker title="Tumor Primario" options={options} />
-          <Picker title="Linfonodos Regionais" options={options} />
-          <Picker title="Metástase" options={options} />
-          <Picker title="Nível de PSA" options={options} />
-          <Picker title="Grau Histológico" options={options} />
+          {headers.map((item: string, index: number) => (
+            <Picker key={index} title={item} options={values[index]} />
+          ))}
           <Result>
             <ViewTexts>
               <Label>RESULTADO</Label>

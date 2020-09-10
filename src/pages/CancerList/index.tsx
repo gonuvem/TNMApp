@@ -6,18 +6,24 @@ import AdMob from '../../components/AdMob';
 
 import {Container, Label, Option, Separator, List, View, Card} from './styles';
 
+const breastClinical = require('../../general/cancers/Breast-Clinical');
+const breastPathological = require('../../general/cancers/Breast-Pathological');
+const colonNRectum = require('../../general/cancers/ColonNRectum');
+const prostate = require('../../general/cancers/Prostate');
+
 const cancerList = [
-  {label: 'C', options: ['Colón e Reto', 'Colón e Reto']},
-  {label: 'M', options: ['Mama']},
-  {label: 'P', options: ['Próstata']},
+  {label: 'C', options: ['Colón e Reto', 'Colón e Reto'], info: colonNRectum},
+  {label: 'M', options: ['Mama'], info: breastClinical},
+  {label: 'P', options: ['Próstata'], info: prostate},
 ];
 
 const CancerList: React.FC = () => {
   const {navigate} = useNavigation();
 
-  const navigateToDetail = useCallback((cancer: string) => {
+  const navigateToDetail = useCallback((cancer: string, info: any) => {
     navigate('CancerDetail', {
       cancerName: cancer,
+      cancerInfo: info,
     });
   }, []);
   return (
@@ -29,7 +35,9 @@ const CancerList: React.FC = () => {
             <View key={index}>
               <Label>{cancer.label}</Label>
               {cancer.options.map((name, index) => (
-                <Card key={index} onPress={() => navigateToDetail(name)}>
+                <Card
+                  key={index}
+                  onPress={() => navigateToDetail(name, cancer.info)}>
                   <Option>{name}</Option>
                   <Separator />
                 </Card>
