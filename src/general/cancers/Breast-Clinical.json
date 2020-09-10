@@ -1,5 +1,6 @@
 {
-  "headers": ["T", "N", "M", "G", "HER2 Status", "ER Status", "PR Status"],
+  "headers": ["T","N","M","G","HER2 Status","ER Status","PR Status"],
+  "inititalValues": ["", "", "", "","","",""],
   "values": [
     [
       "TX",

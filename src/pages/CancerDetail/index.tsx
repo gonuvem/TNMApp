@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 
 import Modal from 'react-native-modal';
 import {useRoute} from '@react-navigation/native';
@@ -26,12 +26,39 @@ import {
   TextButton,
 } from './styles';
 
-const options = ['T0', 'T1', 'T2', 'T3', 'T4'];
-
 const CancerDetail: React.FC = () => {
   const {params} = useRoute();
+
+  const {headers, values, tableObject,inititalValues} = params?.cancerInfo;
   const [openModal, setOpenModal] = useState(false);
-  const {headers, values} = params?.cancerInfo;
+  const [headersValue, setHeadersValue] = useState(inititalValues);
+  const [resultStage, setResultStage] = useState();
+
+  const changeValue = useCallback((index: number, value: string) => {
+    const newHeadersValue = headersValue;
+    newHeadersValue.[index] = value
+
+    setHeadersValue(newHeadersValue)
+
+    searchResult()
+  }, []);
+
+  const searchResult = useCallback(() => {
+    let query = ""
+    for(let i = 0;i < headersValue.length;i++ ){
+      if(query === ''){
+        query = `${headersValue[i]}`
+      }else{
+      query = `${query},${headersValue[i]}`
+      }
+    }
+
+    const result = tableObject[query];
+
+    if(result){
+      setResultStage(result);
+    }
+  },[headersValue])
 
   return (
     <>
@@ -39,17 +66,26 @@ const CancerDetail: React.FC = () => {
         <Header title={params?.cancerName} showCloseButton={true} />
         <ViewFields>
           {headers.map((item: string, index: number) => (
-            <Picker key={index} title={item} options={values[index]} />
+            <Picker
+              key={index}
+              title={item}
+              options={values[index]}
+              changeValue={changeValue}
+              index={index}
+            />
           ))}
+          { resultStage ?
           <Result>
             <ViewTexts>
               <Label>RESULTADO</Label>
-              <Stage>Estagio I</Stage>
+              <Stage>Estagio {resultStage}</Stage>
             </ViewTexts>
             <ButtonSave onPress={() => setOpenModal(true)}>
               <Icon source={heartIcon} />
             </ButtonSave>
           </Result>
+          : undefined
+          }
         </ViewFields>
       </Container>
       <AdMob />

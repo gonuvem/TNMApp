@@ -1,5 +1,6 @@
 {
   "headers": ["T", "N", "M", "PSA", "G"],
+  "inititalValues": ["", "", "", "", ""],
   "values": [
     [
       "cTX",

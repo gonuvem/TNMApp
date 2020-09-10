@@ -8,6 +8,7 @@
      "ER Status",
      "PR Status"
   ],
+  "inititalValues": ["", "", "", "","","",""],
   "values":[
      ["TX","T0","Tis (DCIS)","Tis (Paget)","T1mi","T1a","T1b","T1c","T2","T3","T4a","T4b","T4c","T4d"],
      ["NX","N0","N0(i+)","N0(mol+)","N1mi","N1a","N1b","N1c","N2a","N2b","N3a","N3b","N3c"],

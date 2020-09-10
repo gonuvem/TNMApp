@@ -6,9 +6,16 @@ import {Container, Title, SelectField, Select, CardTitle} from './styles';
 interface PickerProps {
   title: string;
   options: string[];
+  changeValue: Function;
+  index: number;
 }
 
-const Picker: React.FC<PickerProps> = ({options, title}) => {
+const Picker: React.FC<PickerProps> = ({
+  options,
+  title,
+  changeValue,
+  index,
+}) => {
   const scaleTitle = useRef(new Animated.Value(1)).current;
   const moveTitle = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
   const [optionSelected, setOptionSelected] = useState();
@@ -45,7 +52,9 @@ const Picker: React.FC<PickerProps> = ({options, title}) => {
           mode="dropdown"
           selectedValue={optionSelected}
           onValueChange={(item) => {
-            animatedField(item), setOptionSelected(item);
+            animatedField(item),
+              setOptionSelected(item),
+              changeValue(index, item);
           }}>
           <Select.Item label="" value="" />
           {options.map((item) => (
