@@ -6,11 +6,18 @@ import {Container, Title, SelectField, Select, CardTitle} from './styles';
 interface PickerProps {
   title: string;
   options: string[];
+  changeValue: Function;
+  index: number;
 }
 
-const Picker: React.FC<PickerProps> = ({options, title}) => {
+const Picker: React.FC<PickerProps> = ({
+  options,
+  title,
+  changeValue,
+  index,
+}) => {
   const scaleTitle = useRef(new Animated.Value(1)).current;
-  const moveTitle = useRef(new Animated.Value(0)).current;
+  const moveTitle = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
   const [optionSelected, setOptionSelected] = useState();
   const [isOpened, setIsOpended] = useState(false);
 
@@ -23,7 +30,7 @@ const Picker: React.FC<PickerProps> = ({options, title}) => {
         useNativeDriver: true,
       }),
       Animated.timing(moveTitle, {
-        toValue: item ? 18 : 0,
+        toValue: item ? {x: 10, y: 18} : {x: 0, y: 0},
         duration: 200,
         useNativeDriver: true,
       }),
@@ -34,7 +41,8 @@ const Picker: React.FC<PickerProps> = ({options, title}) => {
     <Container>
       <CardTitle
         style={{
-          translateY: moveTitle,
+          translateY: moveTitle.y,
+          translateX: moveTitle.x,
           transform: [{scale: scaleTitle}],
         }}>
         <Title isOpened={isOpened}>{title}</Title>
@@ -44,7 +52,9 @@ const Picker: React.FC<PickerProps> = ({options, title}) => {
           mode="dropdown"
           selectedValue={optionSelected}
           onValueChange={(item) => {
-            animatedField(item), setOptionSelected(item);
+            animatedField(item),
+              setOptionSelected(item),
+              changeValue(index, item);
           }}>
           <Select.Item label="" value="" />
           {options.map((item) => (
