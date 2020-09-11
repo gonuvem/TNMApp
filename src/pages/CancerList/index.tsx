@@ -12,9 +12,15 @@ const colonNRectum = require('../../general/cancers/ColonNRectum');
 const prostate = require('../../general/cancers/Prostate');
 
 const cancerList = [
-  {label: 'C', options: ['Colón e Reto', 'Colón e Reto'], info: colonNRectum},
-  {label: 'M', options: ['Mama'], info: breastClinical},
-  {label: 'P', options: ['Próstata'], info: prostate},
+  {label: 'C', options: [{name: 'Colón e Reto', info: colonNRectum}]},
+  {
+    label: 'M',
+    options: [
+      {name: 'Mama Patológico', info: breastPathological},
+      {name: 'Mama Clínico', info: breastClinical},
+    ],
+  },
+  {label: 'P', options: [{name: 'Próstata', info: prostate}]},
 ];
 
 const CancerList: React.FC = () => {
@@ -34,11 +40,11 @@ const CancerList: React.FC = () => {
           {cancerList.map((cancer, index) => (
             <View key={index}>
               <Label>{cancer.label}</Label>
-              {cancer.options.map((name, index) => (
+              {cancer.options.map((item, index) => (
                 <Card
                   key={index}
-                  onPress={() => navigateToDetail(name, cancer.info)}>
-                  <Option>{name}</Option>
+                  onPress={() => navigateToDetail(item.name, item.info)}>
+                  <Option>{item.name}</Option>
                   <Separator />
                 </Card>
               ))}

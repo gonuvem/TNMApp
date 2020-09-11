@@ -1,4 +1,6 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useRef, useCallback} from 'react';
+
+import {ScrollView} from 'react-native';
 
 import Modal from 'react-native-modal';
 import {useRoute} from '@react-navigation/native';
@@ -28,6 +30,7 @@ import {
 
 const CancerDetail: React.FC = () => {
   const {params} = useRoute();
+  const scrollRef = useRef<ScrollView>();
 
   const {headers, values, tableObject,inititalValues} = params?.cancerInfo;
   const [openModal, setOpenModal] = useState(false);
@@ -45,6 +48,7 @@ const CancerDetail: React.FC = () => {
 
   const searchResult = useCallback(() => {
     let query = ""
+
     for(let i = 0;i < headersValue.length;i++ ){
       if(query === ''){
         query = `${headersValue[i]}`
@@ -55,14 +59,18 @@ const CancerDetail: React.FC = () => {
 
     const result = tableObject[query];
 
+    setResultStage(result);
+
     if(result){
-      setResultStage(result);
+      setTimeout(() => scrollRef.current?.scrollToEnd({duration: 500}),500 );
+
     }
+
   },[headersValue])
 
   return (
     <>
-      <Container>
+      <Container ref={scrollRef} >
         <Header title={params?.cancerName} showCloseButton={true} />
         <ViewFields>
           {headers.map((item: string, index: number) => (
