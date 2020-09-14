@@ -74,7 +74,6 @@ const CancerDetail: React.FC = () => {
   },[headersValue])
 
   const saveResult = useCallback(async() => {
-
     try{
       const saveResults = await fetchResults();
       const newsaveResults = mergeResults(saveResults);
@@ -100,13 +99,15 @@ const CancerDetail: React.FC = () => {
   },[])
 
   const mergeResults = useCallback((results: any) => {
+    const date = `${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()}`
     const result = {
       label: labelResult,
       query: query,
       result: resultStage,
       cancer: params?.cancerName,
-      date: new Date()
+      date: date
     }
+
     return [...JSON.parse(results),result];
   },[labelResult, query, resultStage])
 

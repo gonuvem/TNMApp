@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -35,6 +35,8 @@ const listResult = [
 // const listResult = null
 
 const SavedResults: React.FC = () => {
+  const [savedResults, setSavedResults] = useState();
+
   useEffect(() => {
     const STORAGE_KEY = 'SAVE_RESULTS';
 
@@ -44,7 +46,7 @@ const SavedResults: React.FC = () => {
 
         const parserResults = results ? JSON.parse(results) : null;
 
-        console.log(parserResults);
+        setSavedResults(parserResults);
       } catch (error) {
         console.log(error);
       }
@@ -56,18 +58,19 @@ const SavedResults: React.FC = () => {
     <>
       <Container>
         <Header />
-        {listResult ? (
+        {savedResults ? (
           <ViewInformation
-            data={listResult}
-            keyExtractor={(item) => item.title}
+            data={savedResults}
+            keyExtractor={(item) => item.date}
             renderItem={({item}: any) => (
               <Result>
                 <Stage>
-                  <Number>{item.stage}</Number>
+                  <Number>{item.result}</Number>
                 </Stage>
+                {console.log(item.date)}
                 <InfoResult>
                   <Informations>
-                    <Name>{item.title}</Name>
+                    <Name>{item.label}</Name>
                     <Date>{item.date}</Date>
                   </Informations>
                   <ButtonDelete>
