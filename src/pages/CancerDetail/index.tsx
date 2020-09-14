@@ -1,5 +1,6 @@
 import React, {useState, useRef, useCallback} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
+import {useNavigation} from '@react-navigation/native';
 
 import {ScrollView} from 'react-native';
 
@@ -31,6 +32,8 @@ import {
 
 const CancerDetail: React.FC = () => {
   const {params} = useRoute();
+
+  const {navigate, goBack} = useNavigation();
   const scrollRef = useRef<ScrollView>();
 
   const STORAGE_KEY = 'SAVE_RESULTS';
@@ -41,6 +44,11 @@ const CancerDetail: React.FC = () => {
   const [resultStage, setResultStage] = useState();
   const [labelResult, setLabelResult] = React.useState('');
   const [query, setQuery] = useState();
+
+
+  const navigateToSavedResults = useCallback(() => {
+    navigate('SavedResults');
+  }, [navigate]);
 
   const changeValue = useCallback((index: number, value: string) => {
     const newHeadersValue = headersValue;
@@ -81,6 +89,8 @@ const CancerDetail: React.FC = () => {
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newsaveResults));
 
       setOpenModal(false);
+      setTimeout(() => navigateToSavedResults(),100);
+
       console.log('Resultado salvo');
     }catch(error){
       console.log(error)
