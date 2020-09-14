@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {useCallback, useEffect} from 'react';
+
+import AsyncStorage from '@react-native-community/async-storage';
 
 import AdMob from '../../components/AdMob';
 import Header from './components/Header';
@@ -33,6 +35,23 @@ const listResult = [
 // const listResult = null
 
 const SavedResults: React.FC = () => {
+  useEffect(() => {
+    const STORAGE_KEY = 'SAVE_RESULTS';
+
+    async function getResults() {
+      try {
+        const results = await AsyncStorage.getItem(STORAGE_KEY);
+
+        const parserResults = results ? JSON.parse(results) : null;
+
+        console.log(parserResults);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getResults();
+  }, []);
   return (
     <>
       <Container>
