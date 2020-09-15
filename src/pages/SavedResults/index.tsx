@@ -14,6 +14,7 @@ const colonNRectum = require('../../general/cancers/ColonNRectum');
 const prostate = require('../../general/cancers/Prostate');
 
 import {trashIcon} from '../../general/images';
+import {formatDate} from '../../general/utils';
 
 import {
   Container,
@@ -93,7 +94,7 @@ const SavedResults: React.FC = () => {
                 <InfoResult>
                   <Informations>
                     <Name>{item.label}</Name>
-                    <Date>{item.date}</Date>
+                    <Date>{formatDate(item.date)}</Date>
                   </Informations>
                   <ButtonDelete>
                     <Icon source={trashIcon} />

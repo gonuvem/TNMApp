@@ -1,5 +1,6 @@
 import React, {useState, useRef, useCallback, useEffect} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
+import {useNavigation} from '@react-navigation/native';
 
 import {ScrollView} from 'react-native';
 
@@ -31,6 +32,8 @@ import {
 
 const CancerDetail: React.FC = () => {
   const {params} = useRoute();
+
+  const {navigate, goBack} = useNavigation();
   const scrollRef = useRef<ScrollView>();
 
   const STORAGE_KEY = 'SAVE_RESULTS';
@@ -54,6 +57,10 @@ const CancerDetail: React.FC = () => {
       setResultStage(result);
     }
   },[params])
+
+  const navigateToSavedResults = useCallback(() => {
+    navigate('SavedResults');
+  }, [navigate]);
 
   const changeValue = useCallback((index: number, value: string) => {
     const newHeadersValue = headersValue;
@@ -88,11 +95,14 @@ const CancerDetail: React.FC = () => {
 
   const saveResult = useCallback(async() => {
     try{
+      // await AsyncStorage.removeItem(STORAGE_KEY);
       const saveResults = await fetchResults();
       const newsaveResults = mergeResults(saveResults);
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newsaveResults));
 
       setOpenModal(false);
+      setTimeout(() => navigateToSavedResults(),100);
+
       console.log('Resultado salvo');
     }catch(error){
       console.log(error)
@@ -104,7 +114,7 @@ const CancerDetail: React.FC = () => {
     try{
       const results = await AsyncStorage.getItem(STORAGE_KEY);
 
-      return results ? results : [];
+      return results ? results : null;
 
     }catch(error){
       console.log(error);
@@ -112,16 +122,15 @@ const CancerDetail: React.FC = () => {
   },[])
 
   const mergeResults = useCallback((results: any) => {
-    const date = `${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()}`
     const result = {
       label: labelResult,
-      query: query,
       result: resultStage,
       cancer: params?.cancerName,
-      date: date
+      date: new Date(),
+      query,
     }
 
-    return [...JSON.parse(results),result];
+    return results ? [...JSON.parse(results),result] : [result];
   },[labelResult, query, resultStage])
 
   return (
