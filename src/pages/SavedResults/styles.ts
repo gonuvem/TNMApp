@@ -14,7 +14,7 @@ export const Icon = styled.Image.attrs({
   width: 19px;
 `;
 
-export const Result = styled.View`
+export const Result = styled.TouchableOpacity`
   flex-direction: row;
   margin-bottom: 14px;
 `;

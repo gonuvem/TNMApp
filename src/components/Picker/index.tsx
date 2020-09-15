@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useRef, useState, useEffect} from 'react';
 import {Animated} from 'react-native';
 
 import {Container, Title, SelectField, Select, CardTitle} from './styles';
@@ -8,6 +8,7 @@ interface PickerProps {
   options: string[];
   changeValue: Function;
   index: number;
+  initialValue?: string;
 }
 
 const Picker: React.FC<PickerProps> = ({
@@ -15,6 +16,7 @@ const Picker: React.FC<PickerProps> = ({
   title,
   changeValue,
   index,
+  initialValue,
 }) => {
   const scaleTitle = useRef(new Animated.Value(1)).current;
   const moveTitle = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
@@ -36,6 +38,12 @@ const Picker: React.FC<PickerProps> = ({
       }),
     ]).start();
   }, []);
+
+  useEffect(() => {
+    if (initialValue) {
+      setOptionSelected(initialValue);
+    }
+  }, [initialValue]);
 
   return (
     <Container>

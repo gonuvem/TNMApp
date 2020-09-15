@@ -1,4 +1,4 @@
-import React, {useState, useRef, useCallback} from 'react';
+import React, {useState, useRef, useCallback, useEffect} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import {ScrollView} from 'react-native';
@@ -41,6 +41,19 @@ const CancerDetail: React.FC = () => {
   const [resultStage, setResultStage] = useState();
   const [labelResult, setLabelResult] = React.useState('');
   const [query, setQuery] = useState();
+
+  const [initValueParam, setInitValueParam] = useState();
+
+  useEffect(() => {
+    if(params?.query){
+      const splitedQuery = params.query.split(',');
+      setInitValueParam(splitedQuery)
+
+      const result = tableObject[params?.query];
+
+      setResultStage(result);
+    }
+  },[params])
 
   const changeValue = useCallback((index: number, value: string) => {
     const newHeadersValue = headersValue;
@@ -123,6 +136,7 @@ const CancerDetail: React.FC = () => {
               options={values[index]}
               changeValue={changeValue}
               index={index}
+              initialValue={initValueParam ? initValueParam[index]: undefined}
             />
           ))}
           { resultStage ?
