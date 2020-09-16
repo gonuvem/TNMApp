@@ -1,4 +1,6 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
+
+import {useNavigation} from '@react-navigation/native';
 
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -6,7 +8,13 @@ import AdMob from '../../components/AdMob';
 import Header from './components/Header';
 import EmptyResult from '../../components/EmptyResult';
 
+const breastClinical = require('../../general/cancers/Breast-Clinical');
+const breastPathological = require('../../general/cancers/Breast-Pathological');
+const colonNRectum = require('../../general/cancers/ColonNRectum');
+const prostate = require('../../general/cancers/Prostate');
+
 import {trashIcon} from '../../general/images';
+import {formatDate} from '../../general/utils';
 
 import {
   Container,
@@ -22,19 +30,17 @@ import {
   ViewInformation,
 } from './styles';
 
-const listResult = [
-  {
-    title: 'Jorge da Silva Oliveira - Colón...',
-    date: '21/08/2020',
-    stage: 'IVA',
-  },
-  {title: 'Mama (Alessandra)', date: '19/08/2020', stage: 'IV'},
-  {title: 'Prostáta', date: '17/08/2020', stage: 'I'},
-];
-
-// const listResult = null
+const cancerList = {
+  'Colón e Reto': colonNRectum,
+  'Mama Patológico': breastPathological,
+  'Mama Clínico': breastClinical,
+  Próstata: prostate,
+};
 
 const SavedResults: React.FC = () => {
+  const {navigate} = useNavigation();
+  const [savedResults, setSavedResults] = useState();
+
   useEffect(() => {
     const STORAGE_KEY = 'SAVE_RESULTS';
 
@@ -44,7 +50,7 @@ const SavedResults: React.FC = () => {
 
         const parserResults = results ? JSON.parse(results) : null;
 
-        console.log(parserResults);
+        setSavedResults(parserResults);
       } catch (error) {
         console.log(error);
       }
@@ -52,23 +58,43 @@ const SavedResults: React.FC = () => {
 
     getResults();
   }, []);
+
+  const navigateToDetail = useCallback(
+    (cancer: string, info: any, query: string, result: string) => {
+      navigate('CancerDetail', {
+        cancerName: cancer,
+        cancerInfo: info,
+        query,
+        result,
+      });
+    },
+    [],
+  );
   return (
     <>
       <Container>
         <Header />
-        {listResult ? (
+        {savedResults ? (
           <ViewInformation
-            data={listResult}
-            keyExtractor={(item) => item.title}
+            data={savedResults}
+            keyExtractor={(item) => item.date}
             renderItem={({item}: any) => (
-              <Result>
+              <Result
+                onPress={() =>
+                  navigateToDetail(
+                    item?.cancer,
+                    cancerList[item?.cancer],
+                    item.query,
+                    item?.result,
+                  )
+                }>
                 <Stage>
-                  <Number>{item.stage}</Number>
+                  <Number>{item.result}</Number>
                 </Stage>
                 <InfoResult>
                   <Informations>
-                    <Name>{item.title}</Name>
-                    <Date>{item.date}</Date>
+                    <Name>{item.label}</Name>
+                    <Date>{formatDate(item.date)}</Date>
                   </Informations>
                   <ButtonDelete>
                     <Icon source={trashIcon} />

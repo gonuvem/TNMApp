@@ -1,4 +1,4 @@
-import React, {useState, useRef, useCallback} from 'react';
+import React, {useState, useRef, useCallback, useEffect} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useNavigation} from '@react-navigation/native';
 
@@ -45,6 +45,18 @@ const CancerDetail: React.FC = () => {
   const [labelResult, setLabelResult] = React.useState('');
   const [query, setQuery] = useState();
 
+  const [initValueParam, setInitValueParam] = useState();
+
+  useEffect(() => {
+    if(params?.query){
+      const splitedQuery = params.query.split(',');
+      setInitValueParam(splitedQuery)
+
+      const result = tableObject[params?.query];
+
+      setResultStage(result);
+    }
+  },[params])
 
   const navigateToSavedResults = useCallback(() => {
     navigate('SavedResults');
@@ -82,8 +94,8 @@ const CancerDetail: React.FC = () => {
   },[headersValue])
 
   const saveResult = useCallback(async() => {
-
     try{
+      // await AsyncStorage.removeItem(STORAGE_KEY);
       const saveResults = await fetchResults();
       const newsaveResults = mergeResults(saveResults);
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newsaveResults));
@@ -102,7 +114,7 @@ const CancerDetail: React.FC = () => {
     try{
       const results = await AsyncStorage.getItem(STORAGE_KEY);
 
-      return results ? results : [];
+      return results ? results : null;
 
     }catch(error){
       console.log(error);
@@ -112,12 +124,13 @@ const CancerDetail: React.FC = () => {
   const mergeResults = useCallback((results: any) => {
     const result = {
       label: labelResult,
-      query: query,
       result: resultStage,
       cancer: params?.cancerName,
-      date: new Date()
+      date: new Date(),
+      query,
     }
-    return [...JSON.parse(results),result];
+
+    return results ? [...JSON.parse(results),result] : [result];
   },[labelResult, query, resultStage])
 
   return (
@@ -132,6 +145,7 @@ const CancerDetail: React.FC = () => {
               options={values[index]}
               changeValue={changeValue}
               index={index}
+              initialValue={initValueParam ? initValueParam[index]: undefined}
             />
           ))}
           { resultStage ?
