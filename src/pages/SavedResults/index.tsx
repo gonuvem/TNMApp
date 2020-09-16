@@ -59,7 +59,7 @@ const SavedResults: React.FC = () => {
     }
 
     getResults();
-  }, []);
+  }, [savedResults]);
 
   const handleDeleteResult = useCallback(
     (index: number) => {
@@ -76,8 +76,6 @@ const SavedResults: React.FC = () => {
     try {
       await AsyncStorage.removeItem(STORAGE_KEY);
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newSavedResults));
-
-      setSavedResults(newSavedResults);
     } catch (error) {
       console.log(error);
     }
@@ -95,41 +93,11 @@ const SavedResults: React.FC = () => {
     [],
   );
 
-  const renderItem = useCallback(
-    ({item, index}) => {
-      return (
-        <Result
-          onPress={() =>
-            navigateToDetail(
-              item?.cancer,
-              cancerList[item?.cancer],
-              item.query,
-              item?.result,
-            )
-          }>
-          <Stage>
-            <Number>{item.result}</Number>
-          </Stage>
-          <InfoResult>
-            <Informations>
-              <Name>{item.label}</Name>
-              <Date>{formatDate(item.date)}</Date>
-            </Informations>
-            <ButtonDelete onPress={() => handleDeleteResult(index)}>
-              <Icon source={trashIcon} />
-            </ButtonDelete>
-          </InfoResult>
-        </Result>
-      );
-    },
-    [savedResults],
-  );
-
   return (
     <>
       <Container>
         <Header />
-        {savedResults.length ? (
+        {savedResults?.length ? (
           <ViewInformation
             data={savedResults}
             extraData={savedResults}
