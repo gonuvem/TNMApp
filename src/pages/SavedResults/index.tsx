@@ -61,17 +61,6 @@ const SavedResults: React.FC = () => {
     getResults();
   }, [savedResults]);
 
-  const handleDeleteResult = useCallback(
-    (index: number) => {
-      const newSavedResults = savedResults;
-      newSavedResults.splice(index, 1);
-
-      console.log(newSavedResults);
-      storeNewResults(newSavedResults);
-    },
-    [savedResults],
-  );
-
   const storeNewResults = useCallback(async (newSavedResults) => {
     try {
       await AsyncStorage.removeItem(STORAGE_KEY);
@@ -80,6 +69,17 @@ const SavedResults: React.FC = () => {
       console.log(error);
     }
   }, []);
+
+  const handleDeleteResult = useCallback(
+    (index: number) => {
+      const newSavedResults = savedResults;
+      newSavedResults.splice(index, 1);
+
+      console.log(newSavedResults);
+      storeNewResults(newSavedResults);
+    },
+    [savedResults, storeNewResults],
+  );
 
   const navigateToDetail = useCallback(
     (cancer: string, info: any, query: string, result: string) => {
