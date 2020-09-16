@@ -16,6 +16,8 @@ const prostate = require('../../general/cancers/Prostate');
 import {trashIcon} from '../../general/images';
 import {formatDate} from '../../general/utils';
 
+const STORAGE_KEY = 'SAVE_RESULTS';
+
 import {
   Container,
   Icon,
@@ -39,7 +41,7 @@ const cancerList = {
 
 const SavedResults: React.FC = () => {
   const {navigate} = useNavigation();
-  const [savedResults, setSavedResults] = useState();
+  const [savedResults, setSavedResults] = useState([]);
 
   useEffect(() => {
     const STORAGE_KEY = 'SAVE_RESULTS';
@@ -59,6 +61,28 @@ const SavedResults: React.FC = () => {
     getResults();
   }, []);
 
+  const handleDeleteResult = useCallback(
+    (index: number) => {
+      const newSavedResults = savedResults;
+      newSavedResults.splice(index, 1);
+
+      console.log(newSavedResults);
+      storeNewResults(newSavedResults);
+    },
+    [savedResults],
+  );
+
+  const storeNewResults = useCallback(async (newSavedResults) => {
+    try {
+      await AsyncStorage.removeItem(STORAGE_KEY);
+      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newSavedResults));
+
+      setSavedResults(newSavedResults);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   const navigateToDetail = useCallback(
     (cancer: string, info: any, query: string, result: string) => {
       navigate('CancerDetail', {
@@ -70,15 +94,48 @@ const SavedResults: React.FC = () => {
     },
     [],
   );
+
+  const renderItem = useCallback(
+    ({item, index}) => {
+      return (
+        <Result
+          onPress={() =>
+            navigateToDetail(
+              item?.cancer,
+              cancerList[item?.cancer],
+              item.query,
+              item?.result,
+            )
+          }>
+          <Stage>
+            <Number>{item.result}</Number>
+          </Stage>
+          <InfoResult>
+            <Informations>
+              <Name>{item.label}</Name>
+              <Date>{formatDate(item.date)}</Date>
+            </Informations>
+            <ButtonDelete onPress={() => handleDeleteResult(index)}>
+              <Icon source={trashIcon} />
+            </ButtonDelete>
+          </InfoResult>
+        </Result>
+      );
+    },
+    [savedResults],
+  );
+
   return (
     <>
       <Container>
         <Header />
-        {savedResults ? (
+        {savedResults.length ? (
           <ViewInformation
             data={savedResults}
+            extraData={savedResults}
             keyExtractor={(item) => item.date}
-            renderItem={({item}: any) => (
+            // renderItem={renderItem}
+            renderItem={({item, index}) => (
               <Result
                 onPress={() =>
                   navigateToDetail(
@@ -96,7 +153,7 @@ const SavedResults: React.FC = () => {
                     <Name>{item.label}</Name>
                     <Date>{formatDate(item.date)}</Date>
                   </Informations>
-                  <ButtonDelete>
+                  <ButtonDelete onPress={() => handleDeleteResult(index)}>
                     <Icon source={trashIcon} />
                   </ButtonDelete>
                 </InfoResult>
