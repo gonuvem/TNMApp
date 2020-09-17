@@ -44,8 +44,6 @@ const SavedResults: React.FC = () => {
   const [savedResults, setSavedResults] = useState([]);
 
   useEffect(() => {
-    const STORAGE_KEY = 'SAVE_RESULTS';
-
     async function getResults() {
       try {
         const results = await AsyncStorage.getItem(STORAGE_KEY);
@@ -90,7 +88,7 @@ const SavedResults: React.FC = () => {
         result,
       });
     },
-    [],
+    [navigate],
   );
 
   return (
@@ -102,7 +100,6 @@ const SavedResults: React.FC = () => {
             data={savedResults}
             extraData={savedResults}
             keyExtractor={(item) => item.date}
-            // renderItem={renderItem}
             renderItem={({item, index}) => (
               <Result
                 onPress={() =>
