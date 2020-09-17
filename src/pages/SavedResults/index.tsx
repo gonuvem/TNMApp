@@ -16,6 +16,8 @@ const prostate = require('../../general/cancers/Prostate');
 import {trashIcon} from '../../general/images';
 import {formatDate} from '../../general/utils';
 
+const STORAGE_KEY = 'SAVE_RESULTS';
+
 import {
   Container,
   Icon,
@@ -39,7 +41,7 @@ const cancerList = {
 
 const SavedResults: React.FC = () => {
   const {navigate} = useNavigation();
-  const [savedResults, setSavedResults] = useState();
+  const [savedResults, setSavedResults] = useState([]);
 
   useEffect(() => {
     const STORAGE_KEY = 'SAVE_RESULTS';
@@ -57,7 +59,27 @@ const SavedResults: React.FC = () => {
     }
 
     getResults();
+  }, [savedResults]);
+
+  const storeNewResults = useCallback(async (newSavedResults) => {
+    try {
+      await AsyncStorage.removeItem(STORAGE_KEY);
+      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newSavedResults));
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
+
+  const handleDeleteResult = useCallback(
+    (index: number) => {
+      const newSavedResults = savedResults;
+      newSavedResults.splice(index, 1);
+
+      console.log(newSavedResults);
+      storeNewResults(newSavedResults);
+    },
+    [savedResults, storeNewResults],
+  );
 
   const navigateToDetail = useCallback(
     (cancer: string, info: any, query: string, result: string) => {
@@ -70,15 +92,18 @@ const SavedResults: React.FC = () => {
     },
     [],
   );
+
   return (
     <>
       <Container>
         <Header />
-        {savedResults ? (
+        {savedResults?.length ? (
           <ViewInformation
             data={savedResults}
+            extraData={savedResults}
             keyExtractor={(item) => item.date}
-            renderItem={({item}: any) => (
+            // renderItem={renderItem}
+            renderItem={({item, index}) => (
               <Result
                 onPress={() =>
                   navigateToDetail(
@@ -96,7 +121,7 @@ const SavedResults: React.FC = () => {
                     <Name>{item.label}</Name>
                     <Date>{formatDate(item.date)}</Date>
                   </Informations>
-                  <ButtonDelete>
+                  <ButtonDelete onPress={() => handleDeleteResult(index)}>
                     <Icon source={trashIcon} />
                   </ButtonDelete>
                 </InfoResult>
