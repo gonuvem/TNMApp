@@ -14,7 +14,11 @@ import {
   Icon,
 } from './styles';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  title: string;
+}
+
+const Header: React.FC<HeaderProps> = ({title}) => {
   const {goBack, navigate} = useNavigation();
   const back = useCallback(() => {
     goBack();
@@ -28,7 +32,7 @@ const Header: React.FC = () => {
         <Back onPress={back}>
           <ArrowIcon source={arrowLeft} />
         </Back>
-        <Title>Resultados Salvos</Title>
+        <Title>{title}</Title>
       </ViewButtons>
       <ViewButtons>
         <Button onPress={navigateToSearch}>
