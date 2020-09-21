@@ -26,12 +26,15 @@ const cancerList = [
 const CancerList: React.FC = () => {
   const {navigate} = useNavigation();
 
-  const navigateToDetail = useCallback((cancer: string, info: any) => {
-    navigate('CancerDetail', {
-      cancerName: cancer,
-      cancerInfo: info,
-    });
-  }, []);
+  const navigateToDetail = useCallback(
+    (cancer: string, info: any) => {
+      navigate('CancerDetail', {
+        cancerName: cancer,
+        cancerInfo: info,
+      });
+    },
+    [navigate],
+  );
   return (
     <>
       <Container>

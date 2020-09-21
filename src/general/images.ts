@@ -7,3 +7,5 @@ export const closeIcon = require('../assets/close.png');
 export const heartIcon = require('../assets/heart.png');
 export const trashIcon = require('../assets/trash.png');
 export const doccumentsIcon = require('../assets/documents.png');
+export const gonuvem = require('../assets/gonuvemLogo.png');
+export const filledHeart = require('../assets/redHeart.png');

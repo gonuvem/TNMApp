@@ -1,4 +1,6 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useRef} from 'react';
+
+import Menu, {MenuItem} from 'react-native-material-menu';
 
 import {Container, Title, ViewButtons, Button, Icon, Close} from './styles';
 
@@ -12,6 +14,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({title, showCloseButton}) => {
   const {navigate, goBack} = useNavigation();
+  const menuRef = useRef<Menu>();
 
   const navigateToSearch = useCallback(() => {
     navigate('Search');
@@ -20,8 +23,13 @@ const Header: React.FC<HeaderProps> = ({title, showCloseButton}) => {
   const back = useCallback(() => {
     goBack();
   }, [goBack]);
+
   const navigateToSavedResults = useCallback(() => {
     navigate('SavedResults');
+  }, [navigate]);
+
+  const navigateToAbout = useCallback(() => {
+    menuRef.current?.hide(), navigate('About');
   }, [navigate]);
 
   return (
@@ -41,9 +49,15 @@ const Header: React.FC<HeaderProps> = ({title, showCloseButton}) => {
         <Button onPress={navigateToSearch}>
           <Icon source={searchIcon} />
         </Button>
-        <Button>
-          <Icon source={menuIcon} />
-        </Button>
+        <Menu
+          ref={menuRef}
+          button={
+            <Button onPress={() => menuRef.current?.show()}>
+              <Icon source={menuIcon} />
+            </Button>
+          }>
+          <MenuItem onPress={navigateToAbout}>Sobre</MenuItem>
+        </Menu>
       </ViewButtons>
     </Container>
   );

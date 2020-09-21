@@ -94,7 +94,7 @@ const SavedResults: React.FC = () => {
   return (
     <>
       <Container>
-        <Header />
+        <Header title="Resultados Salvos" />
         {savedResults?.length ? (
           <ViewInformation
             data={savedResults}

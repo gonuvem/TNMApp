@@ -7,6 +7,7 @@ import CancerList from '../pages/CancerList';
 import Search from '../pages/Search';
 import CancerDetail from '../pages/CancerDetail';
 import SavedResult from '../pages/SavedResults';
+import About from '../pages/About';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +30,7 @@ const Router: React.FC = () => (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="Home" component={CancerList} />
       <Stack.Screen name="CancerDetail" component={CancerDetail} />
+      <Stack.Screen name="About" component={About} />
       <Stack.Screen
         name="SavedResults"
         component={SavedResult}
