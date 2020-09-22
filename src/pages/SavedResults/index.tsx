@@ -13,7 +13,7 @@ const breastPathological = require('../../general/cancers/Breast-Pathological');
 const colonNRectum = require('../../general/cancers/ColonNRectum');
 const prostate = require('../../general/cancers/Prostate');
 
-import {trashIcon} from '../../general/images';
+import {trashIcon, doccumentsIcon} from '../../general/images';
 import {formatDate} from '../../general/utils';
 
 const STORAGE_KEY = 'SAVE_RESULTS';
@@ -126,7 +126,11 @@ const SavedResults: React.FC = () => {
             )}
           />
         ) : (
-          <EmptyResult />
+          <EmptyResult
+            text="Não encontramos nenhum resultado salvo. Para guardar um cálculo, aperte
+          no coração ao lado do resultado. "
+            image={doccumentsIcon}
+          />
         )}
       </Container>
       <AdMob />

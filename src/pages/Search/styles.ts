@@ -75,3 +75,31 @@ export const SearchMessage = styled.Text`
   text-align: center;
   padding: 8px;
 `;
+
+export const Option = styled.Text`
+  font-family: 'Roboto-Regular';
+  font-size: 16px;
+  color: ${colors.black};
+  margin: 14px 0 11px 0;
+`;
+
+export const Separator = styled.View`
+  width: 100%;
+  height: 1px;
+  background: ${colors.divisor};
+`;
+
+export const View = styled.View`
+  padding-left: 16px;
+`;
+
+export const Card = styled.TouchableOpacity``;
+
+export const ListResult = styled.FlatList``;
+
+export const Label = styled.Text`
+  font-family: 'Roboto-Bold';
+  font-size: 20px;
+  color: ${colors.black};
+  margin-top: 16px;
+`;

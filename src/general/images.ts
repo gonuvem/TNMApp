@@ -9,3 +9,4 @@ export const trashIcon = require('../assets/trash.png');
 export const doccumentsIcon = require('../assets/documents.png');
 export const gonuvem = require('../assets/gonuvemLogo.png');
 export const filledHeart = require('../assets/redHeart.png');
+export const searchNotFound = require('../assets/notFound.png');

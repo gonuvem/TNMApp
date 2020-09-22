@@ -1,17 +1,17 @@
 import React from 'react';
 
-import {doccumentsIcon} from '../../general/images';
-
 import {Container, EmptyImage, Text} from './styles';
 
-const EmptyResult: React.FC = () => {
+interface EmptyResultProps {
+  text: string;
+  image: any;
+}
+
+const EmptyResult: React.FC<EmptyResultProps> = ({text, image}) => {
   return (
     <Container>
-      <EmptyImage source={doccumentsIcon} />
-      <Text>
-        Não encontramos nenhum resultado salvo. Para guardar um cálculo, aperte
-        no coração ao lado do resultado.
-      </Text>
+      <EmptyImage source={image} />
+      <Text>{text}</Text>
     </Container>
   );
 };
