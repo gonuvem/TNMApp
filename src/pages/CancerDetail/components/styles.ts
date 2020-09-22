@@ -17,9 +17,9 @@ export const Back = styled.TouchableOpacity`
   margin-right: 30px;
 `;
 
-export const ArrowIcon = styled.Image`
-  height: 18px;
-  width: 18px;
+export const CloseIcon = styled.Image`
+  height: 15px;
+  width: 15px;
 `;
 
 export const Title = styled.Text`

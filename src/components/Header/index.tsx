@@ -2,17 +2,18 @@ import React, {useCallback, useRef} from 'react';
 
 import Menu, {MenuItem} from 'react-native-material-menu';
 
-import {Container, Title, ViewButtons, Button, Icon, Close} from './styles';
+import {Container, Title, ViewButtons, Button, Icon, ArrowIcon} from './styles';
 
-import {listIcon, searchIcon, menuIcon, closeIcon} from '../../general/images';
+import {listIcon, searchIcon, menuIcon, arrowLeft} from '../../general/images';
 import {useNavigation} from '@react-navigation/native';
 
 interface HeaderProps {
   title: string;
   showCloseButton?: boolean;
+  screen?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({title, showCloseButton}) => {
+const Header: React.FC<HeaderProps> = ({title, showCloseButton, screen}) => {
   const {navigate, goBack} = useNavigation();
   const menuRef = useRef<Menu>();
 
@@ -37,27 +38,32 @@ const Header: React.FC<HeaderProps> = ({title, showCloseButton}) => {
       <ViewButtons>
         {showCloseButton ? (
           <Button onPress={back}>
-            <Close source={closeIcon} />
+            <ArrowIcon source={arrowLeft} />
           </Button>
         ) : undefined}
         <Title>{title}</Title>
       </ViewButtons>
       <ViewButtons>
-        <Button onPress={navigateToSavedResults}>
-          <Icon source={listIcon} />
-        </Button>
+        {screen === 'SavedResults' ? undefined : (
+          <Button onPress={navigateToSavedResults}>
+            <Icon source={listIcon} />
+          </Button>
+        )}
+
         <Button onPress={navigateToSearch}>
           <Icon source={searchIcon} />
         </Button>
-        <Menu
-          ref={menuRef}
-          button={
-            <Button onPress={() => menuRef.current?.show()}>
-              <Icon source={menuIcon} />
-            </Button>
-          }>
-          <MenuItem onPress={navigateToAbout}>Sobre</MenuItem>
-        </Menu>
+        {screen === 'About' ? undefined : (
+          <Menu
+            ref={menuRef}
+            button={
+              <Button onPress={() => menuRef.current?.show()}>
+                <Icon source={menuIcon} />
+              </Button>
+            }>
+            <MenuItem onPress={navigateToAbout}>Sobre</MenuItem>
+          </Menu>
+        )}
       </ViewButtons>
     </Container>
   );
