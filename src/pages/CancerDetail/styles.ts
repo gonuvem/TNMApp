@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import {colors} from '../../general/colors';
 
 export const Container = styled.ScrollView.attrs({
-  scrollToEnd: {duration: 500},
+  showsVerticalScrollIndicator: false,
 })`
   background: ${colors.white};
   flex: 1;
