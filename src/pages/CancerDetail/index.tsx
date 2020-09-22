@@ -7,7 +7,7 @@ import {ScrollView} from 'react-native';
 import Modal from 'react-native-modal';
 import {useRoute} from '@react-navigation/native';
 
-import Header from '../../components/Header';
+import Header from './components/Header';
 import AdMob from '../../components/AdMob';
 import Picker from '../../components/Picker';
 
@@ -136,7 +136,7 @@ const CancerDetail: React.FC = () => {
   return (
     <>
       <Container ref={scrollRef} >
-        <Header title={params?.cancerName} showCloseButton={true} />
+        <Header title={params?.cancerName}  />
         <ViewFields>
           {headers.map((item: string, index: number) => (
             <Picker

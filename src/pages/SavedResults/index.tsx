@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import AdMob from '../../components/AdMob';
-import Header from './components/Header';
+import Header from '../../components/Header';
 import EmptyResult from '../../components/EmptyResult';
 
 const breastClinical = require('../../general/cancers/Breast-Clinical');
@@ -94,7 +94,11 @@ const SavedResults: React.FC = () => {
   return (
     <>
       <Container>
-        <Header title="Resultados Salvos" />
+        <Header
+          title="Resultados Salvos"
+          showCloseButton
+          screen="SavedResults"
+        />
         {savedResults?.length ? (
           <ViewInformation
             data={savedResults}

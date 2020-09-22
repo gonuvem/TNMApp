@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Header from '../SavedResults/components/Header';
+import Header from '../../components/Header';
 
 import {gonuvem, filledHeart} from '../../general/images';
 
@@ -21,7 +21,7 @@ import {
 const About: React.FC = () => {
   return (
     <Container>
-      <Header title="Sobre" />
+      <Header title="Sobre" showCloseButton screen="About" />
       <Content>
         <ImgLogo />
         <TextAbout>

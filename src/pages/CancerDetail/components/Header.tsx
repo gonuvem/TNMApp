@@ -2,12 +2,17 @@ import React, {useCallback} from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 
-import {arrowLeft, menuIcon, searchIcon} from '../../../general/images';
+import {
+  closeIcon,
+  menuIcon,
+  searchIcon,
+  listIcon,
+} from '../../../general/images';
 
 import {
   Container,
   Back,
-  ArrowIcon,
+  CloseIcon,
   Title,
   Button,
   ViewButtons,
@@ -20,21 +25,31 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({title}) => {
   const {goBack, navigate} = useNavigation();
+
   const back = useCallback(() => {
     goBack();
   }, [goBack]);
+
   const navigateToSearch = useCallback(() => {
     navigate('Search');
   }, [navigate]);
+
+  const navigateToSavedResults = useCallback(() => {
+    navigate('SavedResults');
+  }, [navigate]);
+
   return (
     <Container>
       <ViewButtons>
         <Back onPress={back}>
-          <ArrowIcon source={arrowLeft} />
+          <CloseIcon source={closeIcon} />
         </Back>
         <Title>{title}</Title>
       </ViewButtons>
       <ViewButtons>
+        <Button onPress={navigateToSavedResults}>
+          <Icon source={listIcon} />
+        </Button>
         <Button onPress={navigateToSearch}>
           <Icon source={searchIcon} />
         </Button>
