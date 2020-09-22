@@ -67,7 +67,11 @@ const Search: React.FC = () => {
 
   const handleSearch = useCallback((text: string) => {
     const searchResult = cancerList.filter((item) =>
-      item.name.toLowerCase().includes(text.toLowerCase()),
+      item.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .includes(text.toLowerCase()),
     );
     setResult(text ? searchResult : null);
   }, []);
