@@ -33,14 +33,14 @@ import {
 const CancerDetail: React.FC = () => {
   const {params} = useRoute();
 
-  const {navigate, goBack} = useNavigation();
+  const {navigate} = useNavigation();
   const scrollRef = useRef<ScrollView>();
 
   const STORAGE_KEY = 'SAVE_RESULTS';
 
-  const {headers, values, tableObject,inititalValues} = params?.cancerInfo;
+  const {headers, values, tableObject, inititalValues} = params?.cancerInfo;
   const [openModal, setOpenModal] = useState(false);
-  const [headersValue, setHeadersValue] = useState(inititalValues);
+  const [headersValue, setHeadersValue] = useState();
   const [resultStage, setResultStage] = useState();
   const [labelResult, setLabelResult] = React.useState('');
   const [query, setQuery] = useState();
@@ -48,95 +48,100 @@ const CancerDetail: React.FC = () => {
   const [initValueParam, setInitValueParam] = useState();
 
   useEffect(() => {
-    if(params?.query){
-      const splitedQuery = params.query.split(',');
-      setInitValueParam(splitedQuery)
+    const deepCopyInitialValues = JSON.parse(JSON.stringify(inititalValues));
 
+    setHeadersValue(deepCopyInitialValues);
+  }, [inititalValues]);
+
+  useEffect(() => {
+    if (params?.query) {
+      const splitedQuery = params.query.split(',');
+      setInitValueParam(splitedQuery);
+      setHeadersValue(splitedQuery);
       const result = tableObject[params?.query];
 
       setResultStage(result);
     }
-  },[params])
+  }, [params, tableObject]);
 
   const navigateToSavedResults = useCallback(() => {
     navigate('SavedResults');
   }, [navigate]);
 
-  const changeValue = useCallback((index: number, value: string) => {
-    const newHeadersValue = headersValue;
-    newHeadersValue.[index] = value
-
-    setHeadersValue(newHeadersValue)
-
-    searchResult()
-  }, []);
-
   const searchResult = useCallback(() => {
-    let query = ""
-
-    for(let i = 0;i < headersValue.length;i++ ){
-      if(query === ''){
-        query = `${headersValue[i]}`
-      }else{
-      query = `${query},${headersValue[i]}`
+    let query = '';
+    for (let i = 0; i < inititalValues.length; i++) {
+      if (query === '') {
+        query = `${headersValue[i]}`;
+      } else {
+        query = `${query},${headersValue[i]}`;
       }
     }
-
     const result = tableObject[query];
 
     setQuery(query);
     setResultStage(result);
 
-    if(result){
-      setTimeout(() => scrollRef.current?.scrollToEnd({duration: 500}),500 );
+    if (result) {
+      setTimeout(() => scrollRef.current?.scrollToEnd({duration: 500}), 500);
     }
+  }, [headersValue, inititalValues, tableObject]);
 
-  },[headersValue])
+  const changeValue = useCallback(
+    (index: number, value: string) => {
+      const newHeadersValue = headersValue;
+      newHeadersValue[index] = value;
+      setHeadersValue(newHeadersValue);
+      searchResult();
+    },
+    [headersValue, searchResult],
+  );
 
-  const saveResult = useCallback(async() => {
-    try{
+  const mergeResults = useCallback(
+    (results: any) => {
+      const result = {
+        label: labelResult,
+        result: resultStage,
+        cancer: params?.cancerName,
+        date: new Date(),
+        query,
+      };
+
+      return results ? [...JSON.parse(results), result] : [result];
+    },
+    [labelResult, query, resultStage, params],
+  );
+
+  const fetchResults = useCallback(async () => {
+    try {
+      const results = await AsyncStorage.getItem(STORAGE_KEY);
+
+      return results ? results : null;
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const saveResult = useCallback(async () => {
+    try {
       // await AsyncStorage.removeItem(STORAGE_KEY);
       const saveResults = await fetchResults();
       const newsaveResults = mergeResults(saveResults);
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newsaveResults));
 
       setOpenModal(false);
-      setTimeout(() => navigateToSavedResults(),100);
+      setTimeout(() => navigateToSavedResults(), 100);
 
       console.log('Resultado salvo');
-    }catch(error){
-      console.log(error)
-    }
-
-  },[labelResult])
-
-  const fetchResults = useCallback(async() => {
-    try{
-      const results = await AsyncStorage.getItem(STORAGE_KEY);
-
-      return results ? results : null;
-
-    }catch(error){
+    } catch (error) {
       console.log(error);
     }
-  },[])
-
-  const mergeResults = useCallback((results: any) => {
-    const result = {
-      label: labelResult,
-      result: resultStage,
-      cancer: params?.cancerName,
-      date: new Date(),
-      query,
-    }
-
-    return results ? [...JSON.parse(results),result] : [result];
-  },[labelResult, query, resultStage])
+  }, [fetchResults, mergeResults, navigateToSavedResults]);
 
   return (
     <>
-      <Container ref={scrollRef} >
-        <Header title={params?.cancerName}  />
+      <Container ref={scrollRef}>
+        <Header title={params?.cancerName} />
         <ViewFields>
           {headers.map((item: string, index: number) => (
             <Picker
@@ -145,21 +150,20 @@ const CancerDetail: React.FC = () => {
               options={values[index]}
               changeValue={changeValue}
               index={index}
-              initialValue={initValueParam ? initValueParam[index]: undefined}
+              initialValue={initValueParam ? initValueParam[index] : undefined}
             />
           ))}
-          { resultStage ?
-          <Result>
-            <ViewTexts>
-              <Label>RESULTADO</Label>
-              <Stage>Estagio {resultStage}</Stage>
-            </ViewTexts>
-            <ButtonSave onPress={() => setOpenModal(true)}>
-              <Icon source={heartIcon} />
-            </ButtonSave>
-          </Result>
-          : undefined
-          }
+          {resultStage ? (
+            <Result>
+              <ViewTexts>
+                <Label>RESULTADO</Label>
+                <Stage>Estagio {resultStage}</Stage>
+              </ViewTexts>
+              <ButtonSave onPress={() => setOpenModal(true)}>
+                <Icon source={heartIcon} />
+              </ButtonSave>
+            </Result>
+          ) : undefined}
         </ViewFields>
       </Container>
       <AdMob />
