@@ -57,7 +57,7 @@ const SavedResults: React.FC = () => {
     }
 
     getResults();
-  }, [savedResults]);
+  }, []);
 
   const storeNewResults = useCallback(async (newSavedResults) => {
     try {
@@ -70,11 +70,12 @@ const SavedResults: React.FC = () => {
 
   const handleDeleteResult = useCallback(
     (index: number) => {
-      const newSavedResults = savedResults;
+      const newSavedResults = JSON.parse(JSON.stringify(savedResults));
       newSavedResults.splice(index, 1);
 
       console.log(newSavedResults);
       storeNewResults(newSavedResults);
+      setSavedResults(newSavedResults);
     },
     [savedResults, storeNewResults],
   );
