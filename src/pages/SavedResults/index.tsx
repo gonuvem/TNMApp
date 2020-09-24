@@ -54,7 +54,6 @@ const SavedResults: React.FC = () => {
     async function getResults() {
       try {
         const results = await AsyncStorage.getItem(STORAGE_KEY);
-
         const parserResults = results ? JSON.parse(results) : null;
 
         setSavedResults(parserResults);
@@ -62,7 +61,6 @@ const SavedResults: React.FC = () => {
         console.log(error);
       }
     }
-
     getResults();
   }, []);
 
