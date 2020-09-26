@@ -43,9 +43,9 @@ const CancerList: React.FC = () => {
           {cancerList.map((cancer, index) => (
             <View key={index}>
               <Label>{cancer.label}</Label>
-              {cancer.options.map((item, index) => (
+              {cancer.options.map((item, index2) => (
                 <Card
-                  key={index}
+                  key={index2}
                   onPress={() => navigateToDetail(item.name, item.info)}>
                   <Option>{item.name}</Option>
                   <Separator />

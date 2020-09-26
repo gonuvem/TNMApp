@@ -38,16 +38,22 @@ const cancerList = {
   'Mama Clínico': breastClinical,
   Próstata: prostate,
 };
+interface SavedResult {
+  label: string;
+  result: string;
+  cancer: string;
+  date: string;
+  query: string;
+}
 
 const SavedResults: React.FC = () => {
   const {navigate} = useNavigation();
-  const [savedResults, setSavedResults] = useState([]);
+  const [savedResults, setSavedResults] = useState<SavedResult[]>([]);
 
   useEffect(() => {
     async function getResults() {
       try {
         const results = await AsyncStorage.getItem(STORAGE_KEY);
-
         const parserResults = results ? JSON.parse(results) : null;
 
         setSavedResults(parserResults);
@@ -55,9 +61,8 @@ const SavedResults: React.FC = () => {
         console.log(error);
       }
     }
-
     getResults();
-  }, [savedResults]);
+  }, []);
 
   const storeNewResults = useCallback(async (newSavedResults) => {
     try {
@@ -70,11 +75,12 @@ const SavedResults: React.FC = () => {
 
   const handleDeleteResult = useCallback(
     (index: number) => {
-      const newSavedResults = savedResults;
+      const newSavedResults = JSON.parse(JSON.stringify(savedResults));
       newSavedResults.splice(index, 1);
 
       console.log(newSavedResults);
       storeNewResults(newSavedResults);
+      setSavedResults(newSavedResults);
     },
     [savedResults, storeNewResults],
   );
@@ -103,26 +109,27 @@ const SavedResults: React.FC = () => {
           <ViewInformation
             data={savedResults}
             extraData={savedResults}
-            keyExtractor={(item) => item.date}
-            renderItem={({item, index}) => (
+            keyExtractor={(item: SavedResult) => item.date}
+            renderItem={(result: {item: SavedResult; index: number}) => (
               <Result
                 onPress={() =>
                   navigateToDetail(
-                    item?.cancer,
-                    cancerList[item?.cancer],
-                    item.query,
-                    item?.result,
+                    result.item?.cancer,
+                    cancerList[result.item?.cancer],
+                    result.item.query,
+                    result.item?.result,
                   )
                 }>
                 <Stage>
-                  <Number>{item.result}</Number>
+                  <Number>{result.item.result}</Number>
                 </Stage>
                 <InfoResult>
                   <Informations>
-                    <Name>{item.label}</Name>
-                    <Date>{formatDate(item.date)}</Date>
+                    <Name>{result.item.label}</Name>
+                    <Date>{formatDate(result.item.date)}</Date>
                   </Informations>
-                  <ButtonDelete onPress={() => handleDeleteResult(index)}>
+                  <ButtonDelete
+                    onPress={() => handleDeleteResult(result.index)}>
                     <Icon source={trashIcon} />
                   </ButtonDelete>
                 </InfoResult>

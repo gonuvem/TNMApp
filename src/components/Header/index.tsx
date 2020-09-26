@@ -30,7 +30,8 @@ const Header: React.FC<HeaderProps> = ({title, showCloseButton, screen}) => {
   }, [navigate]);
 
   const navigateToAbout = useCallback(() => {
-    menuRef.current?.hide(), navigate('About');
+    menuRef.current?.hide();
+    navigate('About');
   }, [navigate]);
 
   return (

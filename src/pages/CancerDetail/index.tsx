@@ -40,10 +40,10 @@ const CancerDetail: React.FC = () => {
 
   const {headers, values, tableObject, inititalValues} = params?.cancerInfo;
   const [openModal, setOpenModal] = useState(false);
-  const [headersValue, setHeadersValue] = useState();
+  const [headersValue, setHeadersValue] = useState<string[]>();
   const [resultStage, setResultStage] = useState();
   const [labelResult, setLabelResult] = React.useState('');
-  const [query, setQuery] = useState();
+  const [query, setQuery] = useState<string>();
 
   const [initValueParam, setInitValueParam] = useState();
 
@@ -69,21 +69,21 @@ const CancerDetail: React.FC = () => {
   }, [navigate]);
 
   const searchResult = useCallback(() => {
-    let query = '';
+    let newQuery = '';
     for (let i = 0; i < inititalValues.length; i++) {
-      if (query === '') {
-        query = `${headersValue[i]}`;
+      if (newQuery === '') {
+        newQuery = `${headersValue[i]}`;
       } else {
-        query = `${query},${headersValue[i]}`;
+        newQuery = `${newQuery},${headersValue[i]}`;
       }
     }
-    const result = tableObject[query];
+    const result = tableObject[newQuery];
 
-    setQuery(query);
+    setQuery(newQuery);
     setResultStage(result);
 
     if (result) {
-      setTimeout(() => scrollRef.current?.scrollToEnd({duration: 500}), 500);
+      setTimeout(() => scrollRef.current?.scrollToEnd({animated: true}), 500);
     }
   }, [headersValue, inititalValues, tableObject]);
 

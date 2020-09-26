@@ -20,24 +20,27 @@ const Picker: React.FC<PickerProps> = ({
 }) => {
   const scaleTitle = useRef(new Animated.Value(1)).current;
   const moveTitle = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
-  const [optionSelected, setOptionSelected] = useState();
+  const [optionSelected, setOptionSelected] = useState<string>();
   const [isOpened, setIsOpended] = useState(false);
 
-  const animatedField = useCallback((item: string) => {
-    setIsOpended(item ? true : false);
-    Animated.parallel([
-      Animated.timing(scaleTitle, {
-        toValue: item ? 0.8 : 1,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-      Animated.timing(moveTitle, {
-        toValue: item ? {x: 10, y: 18} : {x: 0, y: 0},
-        duration: 200,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
+  const animatedField = useCallback(
+    (item: string) => {
+      setIsOpended(item ? true : false);
+      Animated.parallel([
+        Animated.timing(scaleTitle, {
+          toValue: item ? 0.8 : 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(moveTitle, {
+          toValue: item ? {x: 10, y: 18} : {x: 0, y: 0},
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    },
+    [moveTitle, scaleTitle],
+  );
 
   useEffect(() => {
     if (initialValue) {
@@ -60,9 +63,9 @@ const Picker: React.FC<PickerProps> = ({
           mode="dropdown"
           selectedValue={optionSelected}
           onValueChange={(item) => {
-            animatedField(item),
-              setOptionSelected(item),
-              changeValue(index, item);
+            animatedField(item);
+            setOptionSelected(item);
+            changeValue(index, item);
           }}>
           <Select.Item label="" value="" />
           {options.map((item) => (

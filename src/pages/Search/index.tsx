@@ -101,14 +101,16 @@ const Search: React.FC = () => {
           ) : (
             <ListResult
               data={result}
-              keyExtractor={(item) => item.name}
-              renderItem={({item, index}) => (
+              keyExtractor={(item: Result) => item.name}
+              renderItem={(element: {item: Result; index: number}) => (
                 <View>
-                  <Label>{item.name.slice(0, 1)}</Label>
+                  <Label>{element.item.name.slice(0, 1)}</Label>
                   <Card
-                    key={index}
-                    onPress={() => navigateToDetail(item.name, item.info)}>
-                    <Option>{item.name}</Option>
+                    key={element.index}
+                    onPress={() =>
+                      navigateToDetail(element.item.name, element.item.info)
+                    }>
+                    <Option>{element.item.name}</Option>
                     <Separator />
                   </Card>
                 </View>
