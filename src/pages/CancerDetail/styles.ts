@@ -1,13 +1,17 @@
 import styled from 'styled-components/native';
 
+import {Animated} from 'react-native';
+
 import {colors} from '../../general/colors';
 
-export const Container = styled.ScrollView.attrs({
+export const Cont = styled.ScrollView.attrs({
   showsVerticalScrollIndicator: false,
 })`
   background: ${colors.white};
   flex: 1;
 `;
+
+export const Container = Animated.createAnimatedComponent(Cont);
 
 export const ViewFields = styled.View`
   padding: 16px;

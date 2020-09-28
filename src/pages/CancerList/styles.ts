@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import {Animated} from 'react-native';
 
 import {colors} from '../../general/colors';
 
@@ -34,3 +35,9 @@ export const List = styled.View`
 export const View = styled.View``;
 
 export const Card = styled.TouchableOpacity``;
+
+export const CardAnimated = styled.View`
+  background: ${colors.white};
+`;
+
+export const AnimatedCard = Animated.createAnimatedComponent(CardAnimated);

@@ -1,4 +1,5 @@
 import React, {useState, useRef, useCallback, useEffect} from 'react';
+import {View, Animated} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useNavigation} from '@react-navigation/native';
 
@@ -46,6 +47,7 @@ const CancerDetail: React.FC = () => {
   const [query, setQuery] = useState<string>();
 
   const [initValueParam, setInitValueParam] = useState();
+  const [scaleValue] = useState(new Animated.Value(0.1));
 
   useEffect(() => {
     const deepCopyInitialValues = JSON.parse(JSON.stringify(inititalValues));
@@ -138,9 +140,25 @@ const CancerDetail: React.FC = () => {
     }
   }, [fetchResults, mergeResults, navigateToSavedResults]);
 
+  useEffect(() => {
+    Animated.timing(scaleValue, {
+      toValue: 1,
+      useNativeDriver: true,
+      // duration: 200,
+    }).start(() => {});
+  }, [scaleValue]);
+
+  const opacityScaled = scaleValue.interpolate({
+    inputRange: [0.1, 0.5, 1],
+    outputRange: [0, 0.2, 1],
+  });
+
   return (
     <>
-      <Container ref={scrollRef}>
+      {/* <Animated.View style={{transform: [{scale: 1}]}}> */}
+      <Container
+        ref={scrollRef}
+        style={{opacity: opacityScaled, transform: [{scaleY: scaleValue}]}}>
         <Header title={params?.cancerName} />
         <ViewFields>
           {headers.map((item: string, index: number) => (
@@ -167,6 +185,7 @@ const CancerDetail: React.FC = () => {
         </ViewFields>
       </Container>
       <AdMob />
+      {/* </Animated.View> */}
       <Modal
         isVisible={openModal}
         onBackButtonPress={() => setOpenModal(false)}

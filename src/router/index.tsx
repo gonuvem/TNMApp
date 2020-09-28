@@ -25,12 +25,39 @@ const configAnimation = {
   },
 };
 
+const opacityTransition: object = {
+  transitionSpec: {
+    open: {
+      animation: 'timing',
+      config: {
+        // duration: 500,
+        easing: Easing.linear,
+      },
+    },
+    close: {
+      animation: 'timing',
+      config: {
+        duration: 300,
+      },
+    },
+  },
+  // cardStyleInterpolator: ({current}: {current: {progress: number}}) => ({
+  //   cardStyle: {
+  //     opacity: current.progress,
+  //   },
+  // }),
+};
+
 const Router: React.FC = () => (
   <NavigationContainer>
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="Home" component={CancerList} />
-      <Stack.Screen name="CancerDetail" component={CancerDetail} />
       <Stack.Screen name="About" component={About} />
+      <Stack.Screen
+        name="CancerDetail"
+        component={CancerDetail}
+        // options={opacityTransition}
+      />
       <Stack.Screen
         name="SavedResults"
         component={SavedResult}
