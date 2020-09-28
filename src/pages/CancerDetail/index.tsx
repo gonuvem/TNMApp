@@ -50,6 +50,21 @@ const CancerDetail: React.FC = () => {
   const [scaleScreenValue] = useState(new Animated.Value(0.1));
   const [scaleResult] = useState(new Animated.Value(0.8));
 
+  const animateResult = useCallback(() => {
+    Animated.spring(scaleResult, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start(() => {});
+  }, [scaleResult]);
+
+  useEffect(() => {
+    Animated.timing(scaleScreenValue, {
+      toValue: 1,
+      useNativeDriver: true,
+      // duration: 200,
+    }).start(() => {});
+  }, [scaleScreenValue]);
+
   useEffect(() => {
     const deepCopyInitialValues = JSON.parse(JSON.stringify(inititalValues));
     setHeadersValue(deepCopyInitialValues);
@@ -63,23 +78,11 @@ const CancerDetail: React.FC = () => {
       const result = tableObject[params?.query];
 
       setResultStage(result);
+
+      scrollRef.current?.scrollToEnd({animated: true});
+      animateResult();
     }
-  }, [params, tableObject]);
-
-  useEffect(() => {
-    Animated.timing(scaleScreenValue, {
-      toValue: 1,
-      useNativeDriver: true,
-      // duration: 200,
-    }).start(() => {});
-  }, [scaleScreenValue]);
-
-  const animateResult = useCallback(() => {
-    Animated.spring(scaleResult, {
-      toValue: 1,
-      useNativeDriver: true,
-    }).start(() => {});
-  }, [scaleResult]);
+  }, [params, tableObject, animateResult]);
 
   const navigateToSavedResults = useCallback(() => {
     navigate('SavedResults');
