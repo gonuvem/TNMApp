@@ -17,8 +17,8 @@ export const ViewFields = styled.View`
   padding: 16px;
 `;
 
-export const Result = styled.View`
-  margin: 16px 0 16px 0;
+export const Res = styled.View`
+  margin: 16px 0 36px 0;
   padding: 24px 16px;
   border-radius: 4px;
   background: ${colors.secondary};
@@ -27,6 +27,8 @@ export const Result = styled.View`
   justify-content: space-between;
   align-items: center;
 `;
+
+export const Result = Animated.createAnimatedComponent(Res);
 
 export const ViewTexts = styled.View``;
 

@@ -47,11 +47,11 @@ const CancerDetail: React.FC = () => {
   const [query, setQuery] = useState<string>();
 
   const [initValueParam, setInitValueParam] = useState();
-  const [scaleValue] = useState(new Animated.Value(0.1));
+  const [scaleScreenValue] = useState(new Animated.Value(0.1));
+  const [scaleResult] = useState(new Animated.Value(0.8));
 
   useEffect(() => {
     const deepCopyInitialValues = JSON.parse(JSON.stringify(inititalValues));
-
     setHeadersValue(deepCopyInitialValues);
   }, [inititalValues]);
 
@@ -65,6 +65,21 @@ const CancerDetail: React.FC = () => {
       setResultStage(result);
     }
   }, [params, tableObject]);
+
+  useEffect(() => {
+    Animated.timing(scaleScreenValue, {
+      toValue: 1,
+      useNativeDriver: true,
+      // duration: 200,
+    }).start(() => {});
+  }, [scaleScreenValue]);
+
+  const animateResult = useCallback(() => {
+    Animated.spring(scaleResult, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start(() => {});
+  }, [scaleResult]);
 
   const navigateToSavedResults = useCallback(() => {
     navigate('SavedResults');
@@ -85,9 +100,10 @@ const CancerDetail: React.FC = () => {
     setResultStage(result);
 
     if (result) {
-      setTimeout(() => scrollRef.current?.scrollToEnd({animated: true}), 500);
+      scrollRef.current?.scrollToEnd({animated: true});
+      animateResult();
     }
-  }, [headersValue, inititalValues, tableObject]);
+  }, [headersValue, inititalValues, tableObject, animateResult]);
 
   const changeValue = useCallback(
     (index: number, value: string) => {
@@ -140,17 +156,14 @@ const CancerDetail: React.FC = () => {
     }
   }, [fetchResults, mergeResults, navigateToSavedResults]);
 
-  useEffect(() => {
-    Animated.timing(scaleValue, {
-      toValue: 1,
-      useNativeDriver: true,
-      // duration: 200,
-    }).start(() => {});
-  }, [scaleValue]);
-
-  const opacityScaled = scaleValue.interpolate({
+  const opacityScreen = scaleScreenValue.interpolate({
     inputRange: [0.1, 0.5, 1],
     outputRange: [0, 0.2, 1],
+  });
+
+  const opacityResult = scaleResult.interpolate({
+    inputRange: [0.8, 0.9, 1],
+    outputRange: [0, 0.5, 1],
   });
 
   return (
@@ -158,7 +171,10 @@ const CancerDetail: React.FC = () => {
       {/* <Animated.View style={{transform: [{scale: 1}]}}> */}
       <Container
         ref={scrollRef}
-        style={{opacity: opacityScaled, transform: [{scaleY: scaleValue}]}}>
+        style={{
+          opacity: opacityScreen,
+          transform: [{scaleY: scaleScreenValue}],
+        }}>
         <Header title={params?.cancerName} />
         <ViewFields>
           {headers.map((item: string, index: number) => (
@@ -171,17 +187,19 @@ const CancerDetail: React.FC = () => {
               initialValue={initValueParam ? initValueParam[index] : undefined}
             />
           ))}
-          {resultStage ? (
-            <Result>
-              <ViewTexts>
-                <Label>RESULTADO</Label>
-                <Stage>Estagio {resultStage}</Stage>
-              </ViewTexts>
-              <ButtonSave onPress={() => setOpenModal(true)}>
-                <Icon source={heartIcon} />
-              </ButtonSave>
-            </Result>
-          ) : undefined}
+          <Result
+            style={{
+              opacity: opacityResult,
+              transform: [{scale: scaleResult}],
+            }}>
+            <ViewTexts>
+              <Label>RESULTADO</Label>
+              <Stage>Estagio {resultStage}</Stage>
+            </ViewTexts>
+            <ButtonSave onPress={() => setOpenModal(true)}>
+              <Icon source={heartIcon} />
+            </ButtonSave>
+          </Result>
         </ViewFields>
       </Container>
       <AdMob />
