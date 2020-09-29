@@ -1,20 +1,10 @@
-import React, {useCallback, useState} from 'react';
-import {Animated} from 'react-native';
+import React, {useCallback} from 'react';
 import {useNavigation} from '@react-navigation/native';
 
 import Header from '../../components/Header';
 import AdMob from '../../components/AdMob';
 
-import {
-  Container,
-  Label,
-  Option,
-  Separator,
-  List,
-  View,
-  Card,
-  AnimatedCard,
-} from './styles';
+import {Container, Label, Option, Separator, List, View, Card} from './styles';
 
 const breastClinical = require('../../general/cancers/Breast-Clinical');
 const breastPathological = require('../../general/cancers/Breast-Pathological');
@@ -35,31 +25,16 @@ const cancerList = [
 
 const CancerList: React.FC = () => {
   const {navigate} = useNavigation();
-  const [scaleValue] = useState(new Animated.Value(0));
-  const [selectedOption, setSelectedOption] = useState<number>(-1);
 
   const navigateToDetail = useCallback(
     (cancer: string, info: any) => {
-      Animated.timing(scaleValue, {
-        toValue: 1,
-        useNativeDriver: true,
-        duration: 500,
-      }).start(() => {
-        scaleValue.setValue(0);
-      });
-
       navigate('CancerDetail', {
         cancerName: cancer,
         cancerInfo: info,
       });
     },
-    [navigate, scaleValue],
+    [navigate],
   );
-
-  const scaleValueInterpolation = scaleValue.interpolate({
-    inputRange: [0, 0.25, 1],
-    outputRange: [1, 20, 50],
-  });
 
   return (
     <>
@@ -70,25 +45,14 @@ const CancerList: React.FC = () => {
             <View key={index}>
               <Label>{cancer.label}</Label>
               {cancer.options.map((item, index2) => (
-                <AnimatedCard
+                <Card
                   key={index2}
-                  style={
-                    selectedOption === item.id
-                      ? [
-                          {zIndex: 1},
-                          {transform: [{scale: scaleValueInterpolation}]},
-                        ]
-                      : undefined
-                  }>
-                  <Card
-                    onPress={() => {
-                      setSelectedOption(item.id);
-                      navigateToDetail(item.name, item.info);
-                    }}>
-                    <Option>{item.name}</Option>
-                    <Separator />
-                  </Card>
-                </AnimatedCard>
+                  onPress={() => {
+                    navigateToDetail(item.name, item.info);
+                  }}>
+                  <Option>{item.name}</Option>
+                  <Separator />
+                </Card>
               ))}
             </View>
           ))}

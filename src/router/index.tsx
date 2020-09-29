@@ -11,20 +11,6 @@ import About from '../pages/About';
 
 const Stack = createStackNavigator();
 
-const forFade = ({current}: any) => ({
-  cardStyle: {
-    opacity: current.progress,
-  },
-});
-
-const configAnimation = {
-  animation: 'timing',
-  config: {
-    duration: 300,
-    easing: Easing.linear,
-  },
-};
-
 const opacityTransition: object = {
   transitionSpec: {
     open: {
@@ -41,44 +27,32 @@ const opacityTransition: object = {
       },
     },
   },
-  // cardStyleInterpolator: ({current}: {current: {progress: number}}) => ({
-  //   cardStyle: {
-  //     opacity: current.progress,
-  //   },
-  // }),
+  cardStyleInterpolator: ({current}: {current: {progress: number}}) => ({
+    cardStyle: {
+      opacity: current.progress,
+    },
+  }),
 };
 
 const Router: React.FC = () => (
   <NavigationContainer>
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="Home" component={CancerList} />
-      <Stack.Screen name="About" component={About} />
+      <Stack.Screen name="CancerDetail" component={CancerDetail} />
       <Stack.Screen
-        name="CancerDetail"
-        component={CancerDetail}
-        // options={opacityTransition}
+        name="About"
+        component={About}
+        options={opacityTransition}
       />
       <Stack.Screen
         name="SavedResults"
         component={SavedResult}
-        options={{
-          cardStyleInterpolator: forFade,
-          transitionSpec: {
-            open: configAnimation,
-            close: configAnimation,
-          },
-        }}
+        options={opacityTransition}
       />
       <Stack.Screen
         name="Search"
         component={Search}
-        options={{
-          cardStyleInterpolator: forFade,
-          transitionSpec: {
-            open: configAnimation,
-            close: configAnimation,
-          },
-        }}
+        options={opacityTransition}
       />
     </Stack.Navigator>
   </NavigationContainer>
