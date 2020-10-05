@@ -1,43 +1,18 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {useNavigation} from '@react-navigation/native';
-
 import AsyncStorage from '@react-native-community/async-storage';
 
 import AdMob from '../../components/AdMob';
 import Header from '../../components/Header';
 import EmptyResult from '../../components/EmptyResult';
+import SavedItem from './components/SavedItem';
 
-const breastClinical = require('../../general/cancers/Breast-Clinical');
-const breastPathological = require('../../general/cancers/Breast-Pathological');
-const colonNRectum = require('../../general/cancers/ColonNRectum');
-const prostate = require('../../general/cancers/Prostate');
-
-import {trashIcon, doccumentsIcon} from '../../general/images';
-import {formatDate} from '../../general/utils';
+import {doccumentsIcon} from '../../general/images';
 
 const STORAGE_KEY = 'SAVE_RESULTS';
 
-import {
-  Container,
-  Icon,
-  Result,
-  Stage,
-  Number,
-  InfoResult,
-  Informations,
-  Name,
-  Date,
-  ButtonDelete,
-  ViewInformation,
-} from './styles';
+import {Container, ViewInformation} from './styles';
 
-const cancerList = {
-  'Colón e Reto': colonNRectum,
-  'Mama Patológico': breastPathological,
-  'Mama Clínico': breastClinical,
-  Próstata: prostate,
-};
 interface SavedResult {
   label: string;
   result: string;
@@ -47,7 +22,6 @@ interface SavedResult {
 }
 
 const SavedResults: React.FC = () => {
-  const {navigate} = useNavigation();
   const [savedResults, setSavedResults] = useState<SavedResult[]>([]);
 
   useEffect(() => {
@@ -85,18 +59,6 @@ const SavedResults: React.FC = () => {
     [savedResults, storeNewResults],
   );
 
-  const navigateToDetail = useCallback(
-    (cancer: string, info: any, query: string, result: string) => {
-      navigate('CancerDetail', {
-        cancerName: cancer,
-        cancerInfo: info,
-        query,
-        result,
-      });
-    },
-    [navigate],
-  );
-
   return (
     <>
       <Container>
@@ -111,29 +73,7 @@ const SavedResults: React.FC = () => {
             extraData={savedResults}
             keyExtractor={(item: SavedResult) => item.date}
             renderItem={(result: {item: SavedResult; index: number}) => (
-              <Result
-                onPress={() =>
-                  navigateToDetail(
-                    result.item?.cancer,
-                    cancerList[result.item?.cancer],
-                    result.item.query,
-                    result.item?.result,
-                  )
-                }>
-                <Stage>
-                  <Number>{result.item.result}</Number>
-                </Stage>
-                <InfoResult>
-                  <Informations>
-                    <Name>{result.item.label}</Name>
-                    <Date>{formatDate(result.item.date)}</Date>
-                  </Informations>
-                  <ButtonDelete
-                    onPress={() => handleDeleteResult(result.index)}>
-                    <Icon source={trashIcon} />
-                  </ButtonDelete>
-                </InfoResult>
-              </Result>
+              <SavedItem result={result} handleDelete={handleDeleteResult} />
             )}
           />
         ) : (

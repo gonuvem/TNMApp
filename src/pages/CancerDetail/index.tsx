@@ -1,4 +1,5 @@
 import React, {useState, useRef, useCallback, useEffect} from 'react';
+import {Animated} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useNavigation} from '@react-navigation/native';
 
@@ -46,10 +47,17 @@ const CancerDetail: React.FC = () => {
   const [query, setQuery] = useState<string>();
 
   const [initValueParam, setInitValueParam] = useState();
+  const [scaleResult] = useState(new Animated.Value(0.8));
+
+  const animateResult = useCallback(() => {
+    Animated.spring(scaleResult, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start(() => {});
+  }, [scaleResult]);
 
   useEffect(() => {
     const deepCopyInitialValues = JSON.parse(JSON.stringify(inititalValues));
-
     setHeadersValue(deepCopyInitialValues);
   }, [inititalValues]);
 
@@ -61,8 +69,11 @@ const CancerDetail: React.FC = () => {
       const result = tableObject[params?.query];
 
       setResultStage(result);
+
+      scrollRef.current?.scrollToEnd({animated: true});
+      animateResult();
     }
-  }, [params, tableObject]);
+  }, [params, tableObject, animateResult]);
 
   const navigateToSavedResults = useCallback(() => {
     navigate('SavedResults');
@@ -83,9 +94,10 @@ const CancerDetail: React.FC = () => {
     setResultStage(result);
 
     if (result) {
-      setTimeout(() => scrollRef.current?.scrollToEnd({animated: true}), 500);
+      scrollRef.current?.scrollToEnd({animated: true});
+      animateResult();
     }
-  }, [headersValue, inititalValues, tableObject]);
+  }, [headersValue, inititalValues, tableObject, animateResult]);
 
   const changeValue = useCallback(
     (index: number, value: string) => {
@@ -138,6 +150,11 @@ const CancerDetail: React.FC = () => {
     }
   }, [fetchResults, mergeResults, navigateToSavedResults]);
 
+  const opacityResult = scaleResult.interpolate({
+    inputRange: [0.8, 0.9, 1],
+    outputRange: [0, 0.5, 1],
+  });
+
   return (
     <>
       <Container ref={scrollRef}>
@@ -153,17 +170,19 @@ const CancerDetail: React.FC = () => {
               initialValue={initValueParam ? initValueParam[index] : undefined}
             />
           ))}
-          {resultStage ? (
-            <Result>
-              <ViewTexts>
-                <Label>RESULTADO</Label>
-                <Stage>Estagio {resultStage}</Stage>
-              </ViewTexts>
-              <ButtonSave onPress={() => setOpenModal(true)}>
-                <Icon source={heartIcon} />
-              </ButtonSave>
-            </Result>
-          ) : undefined}
+          <Result
+            style={{
+              opacity: opacityResult,
+              transform: [{scale: scaleResult}],
+            }}>
+            <ViewTexts>
+              <Label>RESULTADO</Label>
+              <Stage>Estagio {resultStage}</Stage>
+            </ViewTexts>
+            <ButtonSave onPress={() => setOpenModal(true)}>
+              <Icon source={heartIcon} />
+            </ButtonSave>
+          </Result>
         </ViewFields>
       </Container>
       <AdMob />
