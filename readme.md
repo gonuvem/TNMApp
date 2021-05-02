@@ -1,6 +1,6 @@
 # TNMApp
 
-![Preview-Screens](https://github.com/gonuvem/TNMApp/blob/main/screenshots/Screenshot_20210501-155717.png)
+![Preview-Screens](https://github.com/gonuvem/TNMApp/blob/main/screenshots/sreenshotGroup.png)
 
 
 ## About this Project
