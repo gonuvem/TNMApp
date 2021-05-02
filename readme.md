@@ -1,6 +1,6 @@
 # TNMApp
 
-<img src="https://github.com/gonuvem/TNMApp/blob/main/screenshots/Screenshot_20210501-155609.png"  title="sreenshotHome" alt="sreenshot Home" />
+![Preview-Screens](https://github.com/gonuvem/TNMApp/blob/main/screenshots/Screenshot_20210501-155717.png)
 
 
 ## About this Project
